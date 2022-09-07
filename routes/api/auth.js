@@ -14,13 +14,12 @@ router.get('/',auth,async(req,res)=>{
         const user = await User.findById(req.user.id).select("-password")
         res.json(user)
     } catch (error) {
-        res.status(500).send("Server Eroor")
+        res.status(500).send("Server Error")
     }
 })
 
 
 //to login
-
 router.post('/',[
     check('email','Please enter the email').isEmail(),
     check('password','please enter the password').exists()
@@ -36,8 +35,7 @@ router.post('/',[
         if(!user){
             return res.status(400).json({msg:"Invalid credential"})
         }
-
-        const isMatch = await bcrypt.compare(password,user.password);
+         const isMatch = await bcrypt.compare(password,user.password);
         if(!isMatch){
             return res.status(400).json({msg:"Invalid credential"})
         }
@@ -46,7 +44,6 @@ router.post('/',[
                 id:user.id
             }
         }
-        
         jwt.sign(payload,config.get('jwtSecret'),{
             expiresIn:3600000
         },(err,token)=>{

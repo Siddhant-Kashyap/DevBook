@@ -1,9 +1,138 @@
-const express = require('express')
+const express = require("express");
 const router = express.Router();
+const auth = require("../../middleware/auth");
+const Profile = require("../../models/Profile");
+const User = require("../../models/User");
+const { check, validator, validationResult } = require("express-validator");
+
+//route to get profile /api/profile/me
+
+router.get("/me", async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id }).populate(
+      "user",
+      ["name", "avatar"]
+    );
+    if (!profile) {
+      return res.status(400).send("There is no profile for this user ");
+    }
+    res.json(profile);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.post(
+  "/",
+  [
+    auth,
+    [
+      check("status", "Status is required").not().isEmpty(),
+      check("skills", "Skills is Required").not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      return res.status(400).json({ error: error.array() });
+    }
+
+    const {
+      company,
+      website,
+      location,
+      bio,
+      status,
+      githubusername,
+      skills,
+      youtube,
+      facebook,
+      twitter,
+      instagram,
+      linkedin,
+    } = req.body;
+
+    //Build profile objects
+
+    const profileFields = {};
+    profileFields.user = req.user.id;
+    if (company) profileFields.company = company;
+    if (website) profileFields.website = website;
+    if (location) profileFields.location = location;
+    if (bio) profileFields.bio = bio;
+    if (status) profileFields.status = status;
+    if (githubusername) profileFields.githubusername =githubusername;
+    if(skills) {
+        profileFields.skills = skills.split(',').map(skill => skill.trim());
+    }
+
+    //for social objects
+    profileFields.social ={}
+
+    if(youtube) profileFields.social.youtube = youtube;
+    if(facebook) profileFields.social.facebook =facebook;
+    if (twitter) profileFields.social.twitter = twitter;
+    if(instagram) profileFields.social.instagram = instagram;
+    if(linkedin) profileFields.social.linkedin = linkedin;
+
+    try {
+
+        let profile = await Profile.findOne({user:req.user.id})
+
+        if(profile){
+            //UPDATE
+            profile = await Profile.findOneAndUpdate(
+                {user:req.user.id},
+                {$set : profileFields},
+                {new :true}
+            )
+
+            return res.json(profile)
+        }
+
+        //Create
+        profile = new Profile(profileFields);
+        await profile.save()
+        res.json(profile)
+        
+    } catch (error) {
+        console.error(error.message)
+        res.status(500).send("Server Error");
+    }
 
 
-router.get("/",(req,res)=>{res.send("Profile Route")})
+  }
+);
 
 
+//to get all the Profile
+router.get("/",async(req,res)=>{
+    try {
+
+        const profiles = await Profile.find().populate('user',['name','avatar']);
+        res.json(profiles)
+        
+    } catch (error) {
+        console.error(error.message);
+        req.status(500).send('Server error')
+    }
+})
+
+
+//get profile of one person by id
+router.get('/user/:user_id',async(req,res)=>{
+    try {
+        const profile = await Profile.findOne({user:req.params.user_id}).populate('user',['name',"avatar"])
+        if(!profile){
+            return res.status(400).json({msg:"There is no profile for this User"})
+        }
+        res.json(profile)
+        
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server error')
+    }
+})
 
 module.exports = router;
