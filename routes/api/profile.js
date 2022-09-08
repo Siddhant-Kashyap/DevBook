@@ -135,4 +135,109 @@ router.get('/user/:user_id',async(req,res)=>{
     }
 })
 
+
+//to delete the profile and user
+router.delete('/',auth,async(req,res)=>{
+    try {
+      //to remove profile
+      await Profile.findOneAndRemove({user: req.user.id})
+      //to remove user
+      await User.findOneAndRemove({_id:req.user.id});
+
+      res.json({msg:'User has been deleted'})
+      
+    } catch (error) {
+      console.error(error.message);
+        res.status(500).send('Server error')
+    }
+})
+
+//to add the experience 
+//we will use the route /api/profile/experience
+router.put('/experience',[auth,[
+  check('title','Title is required').not().isEmpty(),
+  check('company','Company name is Required ').not().isEmpty(),
+  check('from','Date is required ').not().isEmpty()
+  
+
+]],async(req,res)=>{
+  const error = validationResult(req);
+    if (!error.isEmpty()) {
+      return res.status(400).json({ error: error.array() });
+    }
+
+    const {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description
+    }= req.body;
+
+
+
+    const newExp={
+      title,    // {this is similar to title :title}
+      company,
+      location,
+      from,
+      to,
+      current,
+      description
+    }
+
+
+
+    try {
+
+        const profile = await Profile.findOne({user: req.user.id});
+
+        profile.experience.unshift(newExp);
+
+        await profile.save();
+
+        res.json(profile)
+
+
+      
+    } catch (error) {
+      console.error(error.message);
+        res.status(500).send('Server error')
+    }
+
+
+})
+
+//to delete the experience 
+//@route  --> api/experience/:exp_id
+
+router.delete('/experience/:exp_id',auth,async(req,res)=>{
+
+  try{
+  const profile = await Profile.findOne({user:req.user.id})
+  //get remove index
+  const removeIndex = profile.experience.map(item => item.id).indexOf(req.params.exp_id);
+
+  profile.experience.splice(removeIndex,1);
+
+  await profile.save();
+
+  res.json(profile);
+  }
+  catch(err){
+    console.err(err.message);
+    res.status(400).send('Server Error');
+  }
+
+
+})
+
+
+
+
+
+
+
 module.exports = router;
