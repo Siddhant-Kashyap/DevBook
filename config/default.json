@@ -1,4 +1,6 @@
 {
     "mongoURI":"mongodb+srv://sid07:sid07@merndevbook.21mzrwe.mongodb.net/?retryWrites=true&w=majority",
-    "jwtSecret":"mytokenishere"
+    "jwtSecret":"mytokenishere",
+    "githubSecret": "ae843602803b9335712d05f962045c40bfcb6e2b",
+    "githubClientId":"72495257b8836808b263"
 }
