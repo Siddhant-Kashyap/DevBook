@@ -4,13 +4,13 @@ import Navbar from "./components/Layout/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from "./components/Layout/auth/Register";
 import Login from "./components/Layout/auth/Login";
-import { Fragment } from "react";
-import Alert from "./components/Layout/Alert";
+
+
 
 const App = () => {
   return (
     <Router>
-      <Fragment>
+      <>
         <Navbar />
      
         <Routes>
@@ -19,7 +19,7 @@ const App = () => {
           <Route exact path="login" element={<Login/>} />
           {/* </section> */}
         </Routes>
-      </Fragment>
+      </>
     </Router>
   );
 };
