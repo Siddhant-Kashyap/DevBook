@@ -4,11 +4,15 @@ import Navbar from "./components/Layout/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Register from "./components/Layout/auth/Register";
 import Login from "./components/Layout/auth/Login";
+//REdux
+import {Provider} from 'react-redux';
+import store from "./store";
 
 
 
 const App = () => {
   return (
+    <Provider store ={store}>
     <Router>
       <>
         <Navbar />
@@ -21,6 +25,7 @@ const App = () => {
         </Routes>
       </>
     </Router>
+    </Provider>
   );
 };
 
