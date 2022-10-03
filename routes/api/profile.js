@@ -10,7 +10,7 @@ const { response } = require("express");
 
 //route to get profile /api/profile/me
 
-router.get("/me", async (req, res) => {
+router.get("/me", auth,async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id }).populate(
       "user",
