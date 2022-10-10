@@ -20,7 +20,7 @@ const Navbar = ({auth:{isAuthenticated,loading},logout}) => {
       </li>
     </ul>
   );
-
+//new 
   const guestLinks =(
     <ul>
     <Link  to ="/"role="button" >Developers</Link>
