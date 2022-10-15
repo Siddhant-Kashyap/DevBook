@@ -1,4 +1,4 @@
-import { CLEAR_PROFILE, GET_PROFILE,PROFILE_ERROR } from "../action/types";
+import { CLEAR_PROFILE, GET_PROFILE,PROFILE_ERROR, UPDATE_PROFILE } from "../action/types";
 
 const initialState ={
     pofile :null,
@@ -14,6 +14,7 @@ export default function foo(state = initialState,action){
 
     switch(type){
         case GET_PROFILE:
+        case UPDATE_PROFILE:
             return {
                 ...state,
                 profile:payload,

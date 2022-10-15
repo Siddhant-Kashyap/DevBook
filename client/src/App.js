@@ -13,8 +13,10 @@ import { loadUser } from "./action/auth";
 import { useEffect } from "react";
 import setAuthToken from "./utils/setAuthToken";
 import Dashboard from "./components/Layout/dashboard/Dashboard";
-import CreateProfile from "./components/profile-forms/CreateProfile";
-import EditProfile from "./components/profile-forms/EditProfile";
+import ProfileForm from "./components/profile-forms/ProfileForm";
+import AddEducation from "./components/profile-forms/AddEductaion";
+import AddExperience from "./components/profile-forms/AddExperience";
+
 
 
 if (localStorage.token) {
@@ -43,12 +45,21 @@ const App = () => {
             />
               <Route
               path="/create-profile"
-              element={<PrivateRoute component={CreateProfile} />}
+              element={<PrivateRoute component={ProfileForm} />}
             />
               <Route
               path="/edit-profile"
-              element={<PrivateRoute component={EditProfile} />}
+              element={<PrivateRoute component={ProfileForm} />}
             />
+             <Route
+              path="/add-education"
+              element={<PrivateRoute component={AddEducation} />}
+            />
+              <Route
+              path="/add-experience"
+              element={<PrivateRoute component={AddExperience} />}
+            />
+            
             
           </Routes>
         </>
