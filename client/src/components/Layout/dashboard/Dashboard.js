@@ -21,7 +21,7 @@ const Dashboard = ({getCurrentProfile,deleteAccount,auth:{user},profile:{profile
       </h1>
       <p className="lead"><i className="fas fa-user"></i>Welcome {user && user.name}</p>
 
-       {profile !==undefined?(<><DashboardActions/>
+       {profile !==null?(<><DashboardActions/>
        <Experience experience={profile.experience}/>
        <Education education={profile.education}/>
        <div className="my-2">
